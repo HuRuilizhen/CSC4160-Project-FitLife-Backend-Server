@@ -38,7 +38,8 @@ class LoginResource(Resource):
 
         avatar_base64 = None
         if current_user.avatar:
-            avatar_path = os.path.join(Config.AVATARS_DIR, current_user.avatar)
+            AVATARS_DIR = os.path.expanduser(Config.AVATARS_DIR)
+            avatar_path = os.path.join(AVATARS_DIR, current_user.avatar)
             with open(avatar_path, "rb") as f:
                 avatar_base64 = base64.b64encode(f.read()).decode("utf-8")
 
