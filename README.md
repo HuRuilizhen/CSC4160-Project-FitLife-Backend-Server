@@ -2,33 +2,65 @@
 
 ---
 
+## Team Members
+
+| Name           | GitHub ID                                     | Student ID | Email                          |
+| -------------- | --------------------------------------------- | ---------- | ------------------------------ |
+| Ruilizhen HU   | [HuRuilizhen](https://github.com/HuRuilizhen) | 122090168  | ruilizhenhu@link.cuhk.edu.cn   |
+| Jiajun You     | [AlaNotFound](https://github.com/AlaNotFound) | 122090684  | jiajunyou@link.cuhk.edu.cn     |
+| Zhenghao Huang | [laaaaaasso](https://github.com/laaaaaasso)   | 122090199  | zhenghaohuang@link.cuhk.edu.cn |
+
+---
+
+## How to start the backend server
+
 👉 To install requirements, use the following command:
 
-```
+```bash
 pip install -r requirements.txt
+```
+
+**OR**
+
+👉 To create a virtual environment, use the following command:
+
+```bash
+./init.sh
 ```
 
 ---
 
 👉 To start the server database, use the following command:
 
-```
+```bash
 python init_db.py
 ```
 
 👉 To run the server, use the following command: (Dev Mode)
 
-```
+```bash
 python run.py
 ```
+
+**OR**
+
+👉 To run the server, use the following command: (Dev Mode)
+
+```bash
+./start.sh
+```
+
+📝 See server logs at `nohup.out`
 
 ---
 
 👉 To deploy the server, use the following command: (Prod Mode)
 
-```
+```bash
 docker-compose up -d
 ```
+
+---
 
 📔 Blog for docker beginner: [Docker Setup](https://huruilizhen.github.io/Docker-Setup)
 
