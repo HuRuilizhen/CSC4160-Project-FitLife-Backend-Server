@@ -10,12 +10,10 @@ from backend_app.models import User
 class TokenCheckResource(Resource):
     @jwt_required()
     def get(self):
-        current_user_name = get_jwt_identity()
+        current_user_email = get_jwt_identity()
 
         try:
-            current_user: User = User.query.filter_by(
-                username=current_user_name
-            ).first()
+            current_user: User = User.query.filter_by(email=current_user_email).first()
         except:
             current_user = None
 

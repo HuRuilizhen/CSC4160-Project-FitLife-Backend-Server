@@ -21,8 +21,8 @@ def create_app() -> Flask:
     api = Api(app)
     api.add_resource(resources.LoginResource, "/api/login")
     api.add_resource(resources.RegisterResource, "/api/register")
-    api.add_resource(resources.TokenRefreshResource, "/api/token-refresh")
-    api.add_resource(resources.TokenCheckResource, "/api/token-check")
+    api.add_resource(resources.TokenRefreshResource, "/api/token/refresh")
+    api.add_resource(resources.TokenCheckResource, "/api/token/check")
 
     @app.route(f"{Config.AVATARS_URL}<path:filename>")
     def get_avatar_file(filename: str):
