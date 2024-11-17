@@ -12,6 +12,9 @@ class Config:
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)
     JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=30)
 
+    AVATAR_DEFAULT = "default.jpg"
+    STATIC_DIR = "backend_app/static/"
+
     AVATARS_DIR = "~/mnt/storage/avatars"
     PICTURES_DIR = "~/mnt/storage/pictures"
 

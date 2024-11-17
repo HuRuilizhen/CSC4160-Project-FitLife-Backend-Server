@@ -40,11 +40,13 @@ def modify_user(
 ) -> User:
     user: User = User.query.filter_by(id=user_id).first()
     if username is not None:
-        user.change_avatar(username)
+        user.change_username(username)
     if password_hash is not None:
-        user.change_avatar(password_hash)
+        user.change_password(password_hash)
     if avatar is not None:
+        if user.avatar != Config.AVATAR_DEFAULT:
+            os.remove(os.path.join(os.path.expanduser(Config.AVATARS_DIR), user.avatar))
         user.change_avatar(avatar)
     if email is not None:
-        user.change_password(password_hash)
+        user.change_email(email)
     return user

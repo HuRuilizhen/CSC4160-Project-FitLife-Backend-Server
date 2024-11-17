@@ -21,12 +21,15 @@ def create_app() -> Flask:
     api = Api(app)
     api.add_resource(resources.LoginResource, "/api/login")
     api.add_resource(resources.RegisterResource, "/api/register")
+    api.add_resource(resources.SettingsResource, "/api/settings")
     api.add_resource(resources.TokenRefreshResource, "/api/token/refresh")
     api.add_resource(resources.TokenCheckResource, "/api/token/check")
 
     @app.route(f"{Config.AVATARS_URL}<path:filename>")
     def get_avatar_file(filename: str):
         AVATARS_DIR = os.path.expanduser(Config.AVATARS_DIR)
+        if filename == Config.AVATAR_DEFAULT:
+            return send_from_directory(AVATARS_DIR, filename)
         return send_from_directory(AVATARS_DIR, filename)
 
     @app.route(f"{Config.PICTURES_URL}<path:filename>")

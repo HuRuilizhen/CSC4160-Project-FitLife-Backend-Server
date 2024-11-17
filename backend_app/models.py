@@ -1,4 +1,5 @@
 from . import db
+from .config import Config
 import datetime
 import hashlib
 
@@ -7,7 +8,7 @@ class User(db.Model):
     __tablename__ = "users"
 
     id: int = db.Column(db.Integer, primary_key=True)
-    avatar: str = db.Column(db.Integer, nullable=False, default="default.jpg")
+    avatar: str = db.Column(db.Integer, nullable=False, default=Config.AVATAR_DEFAULT)
     email: str = db.Column(db.String(120), unique=True, nullable=False)
     username: str = db.Column(db.String(80), unique=True, nullable=False)
     password_hash: str = db.Column(db.String(120), nullable=True)
