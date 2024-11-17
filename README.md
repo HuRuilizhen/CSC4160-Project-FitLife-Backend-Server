@@ -2,10 +2,6 @@
 
 ---
 
-This is the backend server for the March Studio but not including the algorithm, merger and ripper.
-
----
-
 👉 To install requirements, use the following command:
 
 ```
