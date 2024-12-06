@@ -9,6 +9,12 @@ import random
 import datetime
 import json
 
+import logging
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 
 def create_user(email: str, username: str, password_hash: str) -> User:
     """Create a new user"""
@@ -21,8 +27,27 @@ def create_user(email: str, username: str, password_hash: str) -> User:
         db.session.add(user)
         db.session.commit()
         return user
-    except:
-        raise ValueError("Email already exists")
+    except IntegrityError as ie:
+        db.session.rollback()  # Rollback in case of an error
+        if "users_email_key" in str(ie):  # Check for unique email constraint violation
+            raise ValueError("Email already exists") from ie
+        elif "users_username_key" in str(
+            ie
+        ):  # Check for unique username constraint violation
+            raise ValueError("Username already exists") from ie
+        else:
+            logger.error(f"An unexpected IntegrityError occurred: {str(ie)}")
+            raise  # Re-raise the exception if it's another type of integrity error
+
+    except SQLAlchemyError as se:
+        db.session.rollback()  # Ensure session is clean after any other SQLAlchemy exception
+        logger.error(f"A SQLAlchemy error occurred: {str(se)}")
+        raise  # Re-raise the exception to be handled by the caller
+
+    except Exception as e:
+        db.session.rollback()  # Ensure session is clean after any other exception
+        logger.error(f"An unexpected error occurred while creating user: {str(e)}")
+        raise  # Re-raise the exception to be handled by the caller
 
 
 def delete_user(user_id: int) -> None:

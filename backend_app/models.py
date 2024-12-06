@@ -8,7 +8,9 @@ class User(db.Model):
     __tablename__ = "users"
 
     id: int = db.Column(db.Integer, primary_key=True)
-    avatar: str = db.Column(db.Integer, nullable=False, default=Config.AVATAR_DEFAULT)
+    avatar: str = db.Column(
+        db.String(255), nullable=False, default=Config.AVATAR_DEFAULT
+    )
     email: str = db.Column(db.String(120), unique=True, nullable=False)
     username: str = db.Column(db.String(80), unique=True, nullable=False)
     password_hash: str = db.Column(db.String(120), nullable=True)
@@ -89,17 +91,23 @@ class Comment(db.Model):
         return f"<Comment {self.content[:50]}>"
 
 
-class Activity(db.Model):
-    __tablename__ = "activities"
+class ActivityRecord(db.Model):
+    __tablename__ = "activity_records"
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    day_summary_id = db.Column(
+        db.Integer, db.ForeignKey("day_summaries.id"), nullable=False
+    )
     activity_type = db.Column(db.String(100), nullable=False)
     duration = db.Column(db.Integer, nullable=False)
     calories_burned = db.Column(db.Float, nullable=False)
     date = db.Column(db.Date, default=datetime.date.today)
 
     user = db.relationship("User", backref=db.backref("activities", lazy=True))
+    day_summary = db.relationship(
+        "DaySummary", backref=db.backref("activities", lazy=True)
+    )
 
     def __repr__(self):
         return f"<Activity {self.activity_type} - {self.duration} minutes>"
@@ -110,15 +118,37 @@ class DietRecord(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    day_summary_id = db.Column(
+        db.Integer, db.ForeignKey("day_summaries.id"), nullable=False
+    )
     food_name = db.Column(db.String(255), nullable=False)
     quantity = db.Column(db.Float, nullable=False)
     calories = db.Column(db.Float, nullable=False)
     date = db.Column(db.Date, default=datetime.date.today)
 
     user = db.relationship("User", backref=db.backref("diet_records", lazy=True))
+    day_summary = db.relationship(
+        "DaySummary", backref=db.backref("diet_records", lazy=True)
+    )
 
     def __repr__(self):
         return f"<DietRecord {self.food_name} - {self.quantity}g>"
+
+
+class DaySummary(db.Model):
+    __tablename__ = "day_summaries"
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    date = db.Column(db.Date, default=datetime.date.today)
+    activity_summary = db.Column(db.Text)
+    diet_summary = db.Column(db.Text)
+    health_advice = db.Column(db.Text)
+
+    user = db.relationship("User", backref=db.backref("day_summaries", lazy=True))
+
+    def __repr__(self):
+        return f"<DaySummary {self.date}>"
 
 
 class HealthReport(db.Model):

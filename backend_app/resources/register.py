@@ -16,7 +16,7 @@ class RegisterResource(Resource):
                 username=data["username"],
                 password_hash=data["password"],
             )
-        except:
-            return {"message": "Email already exists", "is_valid": False}
+        except Exception as e:
+            return {"message": f"{str(e)}", "is_valid": False}
 
         return {"message": "User successfully created", "is_valid": True}
