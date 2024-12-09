@@ -1,7 +1,5 @@
 from . import db
-from .models import (
-    User,
-)
+from .models import User, DaySummary, Post, ActivityRecord
 from .config import Config
 
 import os
@@ -75,3 +73,66 @@ def modify_user(
     if email is not None:
         user.change_email(email)
     return user
+
+
+def fetch_posts(user_id: int, datetime: datetime) -> list:
+    posts = (
+        Post.query.filter_by(user_id=user_id)
+        .order_by(Post.created_at.desc())
+        .limit(3)
+        .all()
+    )
+    posts_ = []
+    for post in posts:
+        posts_.append(
+            {
+                "id": post.id,
+                "title": post.title,
+                "author": post.user.username,
+                "summary": post.summary,
+                "date": post.created_at.strftime("%Y-%m-%d"),
+            }
+        )
+    return posts_
+
+
+def fetch_activities(user_id: int, datetime: datetime) -> dict:
+    recentActivities = (
+        ActivityRecord.query.filter_by(user_id=user_id)
+        .order_by(ActivityRecord.date.desc())
+        .limit(5)
+        .all()
+    )
+    recentActivities_ = []
+    for activity in recentActivities:
+        recentActivities_.append(
+            {
+                "id": activity.id,
+                "activity_type": activity.activity_type,
+                "duration": activity.duration,
+                "calories_burned": activity.calories_burned,
+                "description": f"{activity.activity_type} for {activity.duration} minutes burned {activity.calories_burned} calories on {activity.date.strftime('%Y-%m-%d')}",
+                "date": activity.date.strftime("%Y-%m-%d"),
+            }
+        )
+    return recentActivities_
+
+
+def fetch_dashboard(user_id: int) -> dict:
+    userCaloriesBurned = None
+    userCaloriesConsumed = None
+    today = datetime.datetime.now().date()
+    daySummary: DaySummary = DaySummary.query.filter_by(
+        user_id=user_id, date=today
+    ).first()
+
+    if daySummary is not None:
+        userCaloriesBurned = daySummary.activity_summary
+        userCaloriesConsumed = daySummary.diet_summary
+
+    return {
+        "userCaloriesBurned": userCaloriesBurned,
+        "userCaloriesConsumed": userCaloriesConsumed,
+        "posts": fetch_posts(user_id, datetime.datetime.now()),
+        "recentActivities": fetch_activities(user_id, datetime.datetime.now()),
+    }

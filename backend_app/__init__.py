@@ -24,6 +24,7 @@ def create_app() -> Flask:
     api.add_resource(resources.SettingsResource, "/api/settings")
     api.add_resource(resources.TokenRefreshResource, "/api/token/refresh")
     api.add_resource(resources.TokenCheckResource, "/api/token/check")
+    api.add_resource(resources.DashboardFetchResource, "/api/dashboard/fetch")
 
     @app.route(f"{Config.AVATARS_URL}<path:filename>")
     def get_avatar_file(filename: str):

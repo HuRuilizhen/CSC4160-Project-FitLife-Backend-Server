@@ -64,6 +64,7 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     title = db.Column(db.String(255), nullable=False)
+    summary = db.Column(db.Text, nullable=False)
     content = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     updated_at = db.Column(db.DateTime, onupdate=datetime.datetime.utcnow)
@@ -143,7 +144,6 @@ class DaySummary(db.Model):
     date = db.Column(db.Date, default=datetime.date.today)
     activity_summary = db.Column(db.Text)
     diet_summary = db.Column(db.Text)
-    health_advice = db.Column(db.Text)
 
     user = db.relationship("User", backref=db.backref("day_summaries", lazy=True))
 
