@@ -68,9 +68,16 @@ class Post(db.Model):
     content = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     updated_at = db.Column(db.DateTime, onupdate=datetime.datetime.utcnow)
-    image_url = db.Column(db.String(255))
+    image_url = db.Column(db.String(255), nullable=True)
 
     user = db.relationship("User", backref=db.backref("posts", lazy=True))
+
+    def __init__(self, user_id, title, summary, content, image_url):
+        self.user_id = user_id
+        self.title = title
+        self.summary = summary
+        self.content = content
+        self.image_url = image_url
 
     def __repr__(self):
         return f"<Post {self.title}>"

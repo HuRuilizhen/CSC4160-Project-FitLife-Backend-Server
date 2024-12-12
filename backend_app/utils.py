@@ -75,7 +75,7 @@ def modify_user(
     return user
 
 
-def fetch_posts(user_id: int, datetime: datetime) -> list:
+def fetch_post_by_user(user_id: int, datetime: datetime) -> list:
     posts = (
         Post.query.filter_by(user_id=user_id)
         .order_by(Post.created_at.desc())
@@ -84,12 +84,21 @@ def fetch_posts(user_id: int, datetime: datetime) -> list:
     )
     posts_ = []
     for post in posts:
+        post: Post
         posts_.append(
             {
                 "id": post.id,
                 "title": post.title,
                 "author": post.user.username,
+                "author_avatar_url": Config.API_PREFIX
+                + Config.AVATARS_URL
+                + post.user.avatar,
                 "summary": post.summary,
+                "image_url": (
+                    Config.API_PREFIX + Config.PICTURES_URL + post.image_url
+                    if post.image_url is not None
+                    else None
+                ),
                 "date": post.created_at.strftime("%Y-%m-%d"),
             }
         )
@@ -105,6 +114,7 @@ def fetch_activities(user_id: int, datetime: datetime) -> dict:
     )
     recentActivities_ = []
     for activity in recentActivities:
+        activity: ActivityRecord
         recentActivities_.append(
             {
                 "id": activity.id,
@@ -133,6 +143,48 @@ def fetch_dashboard(user_id: int) -> dict:
     return {
         "userCaloriesBurned": userCaloriesBurned,
         "userCaloriesConsumed": userCaloriesConsumed,
-        "posts": fetch_posts(user_id, datetime.datetime.now()),
+        "posts": fetch_post_by_user(user_id, datetime.datetime.now()),
         "recentActivities": fetch_activities(user_id, datetime.datetime.now()),
     }
+
+
+def create_post(
+    user_id: int, title: str, summary: str, content: str, image_url: str
+) -> Post:
+    post = Post(
+        user_id=user_id,
+        title=title,
+        summary=summary,
+        content=content,
+        image_url=image_url,
+    )
+    db.session.add(post)
+    db.session.commit()
+    return post
+
+
+def fetch_post(page: int = 1, per_page: int = 10) -> list:
+    posts = Post.query.order_by(Post.created_at.desc()).paginate(
+        page=page, per_page=per_page
+    )
+    posts_ = []
+    for post in posts:
+        post: Post
+        posts_.append(
+            {
+                "id": post.id,
+                "title": post.title,
+                "author": post.user.username,
+                "author_avatar_url": Config.API_PREFIX
+                + Config.AVATARS_URL
+                + post.user.avatar,
+                "summary": post.summary,
+                "image_url": (
+                    Config.API_PREFIX + Config.PICTURES_URL + post.image_url
+                    if post.image_url is not None
+                    else None
+                ),
+                "date": post.created_at.strftime("%Y-%m-%d"),
+            }
+        )
+    return posts_
