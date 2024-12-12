@@ -7,6 +7,7 @@ from .dashboard_fetch import DashboardFetchResource
 from .post_create import PostCreateResource
 from .post_fetch import PostFetchResource
 from .post_detail import PostDetailResource
+from .post_update import PostUpdateResource
 from .comment_create import CommentCreateResource
 
 
@@ -20,5 +21,6 @@ __all__ = [
     "PostCreateResource",
     "PostFetchResource",
     "PostDetailResource",
+    "PostUpdateResource",
     "CommentCreateResource",
 ]

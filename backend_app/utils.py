@@ -238,3 +238,16 @@ def create_comment(user_id: int, post_id: int, content: str) -> Comment:
     db.session.add(comment)
     db.session.commit()
     return comment
+
+
+def update_post(post_id: int, title: str, summary: str, content: str) -> Post:
+    post: Post = Post.query.filter_by(id=post_id).first()
+
+    if post is None:
+        raise Exception("Post not found")
+
+    post.title = title
+    post.summary = summary
+    post.content = content
+    db.session.commit()
+    return post
