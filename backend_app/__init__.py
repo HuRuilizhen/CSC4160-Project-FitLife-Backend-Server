@@ -28,6 +28,7 @@ def create_app() -> Flask:
     api.add_resource(resources.PostCreateResource, "/api/post/create")
     api.add_resource(resources.PostFetchResource, "/api/post/fetch")
     api.add_resource(resources.PostDetailResource, "/api/post/detail")
+    api.add_resource(resources.PostDeleteResource, "/api/post/delete")
     api.add_resource(resources.CommentCreateResource, "/api/comment/create")
     api.add_resource(resources.PostUpdateResource, "/api/post/update")
 

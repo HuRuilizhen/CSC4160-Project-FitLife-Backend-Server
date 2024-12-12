@@ -8,6 +8,7 @@ from .post_create import PostCreateResource
 from .post_fetch import PostFetchResource
 from .post_detail import PostDetailResource
 from .post_update import PostUpdateResource
+from .post_delete import PostDeleteResource
 from .comment_create import CommentCreateResource
 
 
@@ -22,5 +23,6 @@ __all__ = [
     "PostFetchResource",
     "PostDetailResource",
     "PostUpdateResource",
+    "PostDeleteResource",
     "CommentCreateResource",
 ]

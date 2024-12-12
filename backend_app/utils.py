@@ -251,3 +251,17 @@ def update_post(post_id: int, title: str, summary: str, content: str) -> Post:
     post.content = content
     db.session.commit()
     return post
+
+
+def delete_post(post_id: int) -> None:
+    post: Post = Post.query.filter_by(id=post_id).first()
+
+    if post is None:
+        raise Exception("Post not found")
+
+    comments = Comment.query.filter_by(post_id=post_id).all()
+    for comment in comments:
+        db.session.delete(comment)
+
+    db.session.delete(post)
+    db.session.commit()
