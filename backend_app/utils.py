@@ -219,6 +219,7 @@ def fetch_comments(post_id: int) -> list:
             {
                 "id": comment.id,
                 "author": comment.user.username,
+                "author_id": comment.user.id,
                 "author_avatar_url": Config.API_PREFIX
                 + Config.AVATARS_URL
                 + comment.user.avatar,
@@ -227,17 +228,6 @@ def fetch_comments(post_id: int) -> list:
             }
         )
     return comments_
-
-
-def create_comment(user_id: int, post_id: int, content: str) -> Comment:
-    comment = Comment(
-        user_id=user_id,
-        post_id=post_id,
-        content=content,
-    )
-    db.session.add(comment)
-    db.session.commit()
-    return comment
 
 
 def update_post(post_id: int, title: str, summary: str, content: str) -> Post:
@@ -265,3 +255,28 @@ def delete_post(post_id: int) -> None:
 
     db.session.delete(post)
     db.session.commit()
+
+    return
+
+
+def create_comment(user_id: int, post_id: int, content: str) -> Comment:
+    comment = Comment(
+        user_id=user_id,
+        post_id=post_id,
+        content=content,
+    )
+    db.session.add(comment)
+    db.session.commit()
+    return comment
+
+
+def delete_comment(comment_id: int) -> None:
+    comment: Comment = Comment.query.filter_by(id=comment_id).first()
+
+    if comment is None:
+        raise Exception("Comment not found")
+
+    db.session.delete(comment)
+    db.session.commit()
+
+    return
