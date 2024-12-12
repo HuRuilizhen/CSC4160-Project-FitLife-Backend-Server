@@ -27,12 +27,13 @@ def create_app() -> Flask:
     api.add_resource(resources.DashboardFetchResource, "/api/dashboard/fetch")
     api.add_resource(resources.PostCreateResource, "/api/post/create")
     api.add_resource(resources.PostFetchResource, "/api/post/fetch")
+    api.add_resource(resources.PostDetailResource, "/api/post/detail")
+    api.add_resource(resources.CommentCreateResource, "/api/comment/create")
 
     @app.route(f"{Config.API_PREFIX}{Config.AVATARS_URL}<path:filename>")
     def get_avatar_file(filename: str):
         if filename == Config.AVATAR_DEFAULT:
             STATIC_DIR = os.path.join(os.path.abspath(os.curdir), Config.STATIC_DIR)
-            print(STATIC_DIR)
             return send_from_directory(STATIC_DIR, filename)
         AVATARS_DIR = os.path.expanduser(Config.AVATARS_DIR)
         return send_from_directory(AVATARS_DIR, filename)

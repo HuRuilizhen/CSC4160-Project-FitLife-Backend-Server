@@ -1,5 +1,5 @@
 from . import db
-from .models import User, DaySummary, Post, ActivityRecord
+from .models import User, Post, Comment, DaySummary, ActivityRecord
 from .config import Config
 
 import os
@@ -188,3 +188,53 @@ def fetch_post(page: int = 1, per_page: int = 10) -> list:
             }
         )
     return posts_
+
+
+def fetch_post_by_id(post_id: int) -> Post:
+    post = Post.query.filter_by(id=post_id).first()
+    post_ = {
+        "id": post.id,
+        "title": post.title,
+        "author": post.user.username,
+        "author_id": post.user.id,
+        "author_avatar_url": Config.API_PREFIX + Config.AVATARS_URL + post.user.avatar,
+        "summary": post.summary,
+        "content": post.content,
+        "image_url": (
+            Config.API_PREFIX + Config.PICTURES_URL + post.image_url
+            if post.image_url is not None
+            else None
+        ),
+        "date": post.created_at.strftime("%Y-%m-%d"),
+    }
+    return post_
+
+
+def fetch_comments(post_id: int) -> list:
+    comments = Comment.query.filter_by(post_id=post_id).all()
+    comments_ = []
+    for comment in comments:
+        comment: Comment
+        comments_.append(
+            {
+                "id": comment.id,
+                "author": comment.user.username,
+                "author_avatar_url": Config.API_PREFIX
+                + Config.AVATARS_URL
+                + comment.user.avatar,
+                "content": comment.content,
+                "date": comment.created_at.strftime("%Y-%m-%d"),
+            }
+        )
+    return comments_
+
+
+def create_comment(user_id: int, post_id: int, content: str) -> Comment:
+    comment = Comment(
+        user_id=user_id,
+        post_id=post_id,
+        content=content,
+    )
+    db.session.add(comment)
+    db.session.commit()
+    return comment

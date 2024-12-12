@@ -6,6 +6,8 @@ from .token_check import TokenCheckResource
 from .dashboard_fetch import DashboardFetchResource
 from .post_create import PostCreateResource
 from .post_fetch import PostFetchResource
+from .post_detail import PostDetailResource
+from .comment_create import CommentCreateResource
 
 
 __all__ = [
@@ -17,4 +19,6 @@ __all__ = [
     "DashboardFetchResource",
     "PostCreateResource",
     "PostFetchResource",
+    "PostDetailResource",
+    "CommentCreateResource",
 ]

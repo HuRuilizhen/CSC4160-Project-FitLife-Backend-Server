@@ -36,21 +36,14 @@ class LoginResource(Resource):
             }
             return response
 
-        avatar_base64 = None
-        if current_user.avatar:
-            if current_user.avatar == Config.AVATAR_DEFAULT:
-                AVATARS_DIR = Config.STATIC_DIR
-            else:
-                AVATARS_DIR = os.path.expanduser(Config.AVATARS_DIR)
-            avatar_path = os.path.join(AVATARS_DIR, current_user.avatar)
-            with open(avatar_path, "rb") as f:
-                avatar_base64 = base64.b64encode(f.read()).decode("utf-8")
-
         response = {
             "message": f"Login successfully as {current_user.username}",
             "user": {
+                "id": current_user.id,
                 "username": current_user.username,
-                "avatar_base64": avatar_base64,
+                "avatar_url": Config.API_PREFIX
+                + Config.AVATARS_URL
+                + current_user.avatar,
             },
             "is_valid": True,
             "access_token": create_access_token(identity=current_user.email),
