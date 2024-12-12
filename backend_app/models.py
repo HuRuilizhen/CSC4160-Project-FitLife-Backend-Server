@@ -149,8 +149,8 @@ class DaySummary(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     date = db.Column(db.Date, default=datetime.date.today)
-    activity_summary = db.Column(db.Text)
-    diet_summary = db.Column(db.Text)
+    activity_summary = db.Column(db.Float, nullable=False)
+    diet_summary = db.Column(db.Float, nullable=False)
 
     user = db.relationship("User", backref=db.backref("day_summaries", lazy=True))
 
