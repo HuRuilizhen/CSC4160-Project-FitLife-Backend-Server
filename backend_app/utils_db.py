@@ -3,9 +3,7 @@ from .models import User, Post, Comment, DaySummary, ActivityRecord
 from .config import Config
 
 import os
-import random
 import datetime
-import json
 
 import logging
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
@@ -26,26 +24,24 @@ def create_user(email: str, username: str, password_hash: str) -> User:
         db.session.commit()
         return user
     except IntegrityError as ie:
-        db.session.rollback()  # Rollback in case of an error
-        if "users_email_key" in str(ie):  # Check for unique email constraint violation
+        db.session.rollback()
+        if "users_email_key" in str(ie):
             raise ValueError("Email already exists") from ie
-        elif "users_username_key" in str(
-            ie
-        ):  # Check for unique username constraint violation
+        elif "users_username_key" in str(ie):
             raise ValueError("Username already exists") from ie
         else:
             logger.error(f"An unexpected IntegrityError occurred: {str(ie)}")
-            raise  # Re-raise the exception if it's another type of integrity error
+            raise
 
     except SQLAlchemyError as se:
-        db.session.rollback()  # Ensure session is clean after any other SQLAlchemy exception
+        db.session.rollback()
         logger.error(f"A SQLAlchemy error occurred: {str(se)}")
-        raise  # Re-raise the exception to be handled by the caller
+        raise
 
     except Exception as e:
-        db.session.rollback()  # Ensure session is clean after any other exception
+        db.session.rollback()
         logger.error(f"An unexpected error occurred while creating user: {str(e)}")
-        raise  # Re-raise the exception to be handled by the caller
+        raise
 
 
 def delete_user(user_id: int) -> None:
@@ -265,8 +261,10 @@ def create_comment(user_id: int, post_id: int, content: str) -> Comment:
         post_id=post_id,
         content=content,
     )
+
     db.session.add(comment)
     db.session.commit()
+
     return comment
 
 
@@ -280,3 +278,48 @@ def delete_comment(comment_id: int) -> None:
     db.session.commit()
 
     return
+
+
+def create_day_summary(user_id: int) -> DaySummary:
+    print("start create day summary")
+    daySummary: DaySummary = DaySummary(user_id=user_id)
+
+    db.session.add(daySummary)
+    db.session.commit()
+
+    print("end create day summary")
+    return daySummary
+
+
+def find_day_summary(user_id: int) -> DaySummary:
+    print("start find day summary")
+    today = datetime.date.today()
+    daySummary: DaySummary = DaySummary.query.filter_by(
+        user_id=user_id, date=today
+    ).first()
+
+    if daySummary is None:
+        daySummary = create_day_summary(user_id)
+
+    print("end find day summary")
+    return daySummary
+
+
+def create_activity_record(
+    user_id: int, activity_type: str, duration: int, calories_burned: int
+) -> ActivityRecord:
+    daySummary: DaySummary = find_day_summary(user_id)
+    daySummary.activity_summary += calories_burned
+
+    activityRecord: ActivityRecord = ActivityRecord(
+        user_id=user_id,
+        day_summary_id=daySummary.id,
+        activity_type=activity_type,
+        duration=duration,
+        calories_burned=calories_burned,
+    )
+
+    db.session.add(activityRecord)
+    db.session.commit()
+
+    return activityRecord

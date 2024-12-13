@@ -5,7 +5,7 @@ from flask_jwt_extended import (
     get_jwt_identity,
 )
 from backend_app.models import User
-from backend_app.utils import fetch_post_by_id, fetch_comments
+from backend_app.utils_db import fetch_post_by_id, fetch_comments
 
 
 class PostDetailResource(Resource):

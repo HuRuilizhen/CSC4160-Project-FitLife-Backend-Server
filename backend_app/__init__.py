@@ -5,8 +5,8 @@ from flask_jwt_extended import JWTManager
 import os
 
 from .extensions import db, jwt
-from . import resources
 from .config import Config
+from . import resources
 
 
 def create_app() -> Flask:
@@ -32,13 +32,15 @@ def create_app() -> Flask:
     api.add_resource(resources.PostUpdateResource, "/api/post/update")
     api.add_resource(resources.CommentCreateResource, "/api/comment/create")
     api.add_resource(resources.CommentDeleteResource, "/api/comment/delete")
-    api.add_resource(resources.SportLogCreateResource, "/api/sportlog/create")
+    api.add_resource(resources.ActivityRecordCreate, "/api/activity/create")
 
     @app.route(f"{Config.API_PREFIX}{Config.AVATARS_URL}<path:filename>")
     def get_avatar_file(filename: str):
         if filename == Config.AVATAR_DEFAULT:
-            STATIC_DIR = os.path.join(os.path.abspath(os.curdir), Config.STATIC_DIR)
-            return send_from_directory(STATIC_DIR, filename)
+            STATIC_AVATAR_DIR = os.path.join(
+                os.path.abspath(os.curdir), Config.STATIC_AVATAR_DIR
+            )
+            return send_from_directory(STATIC_AVATAR_DIR, filename)
         AVATARS_DIR = os.path.expanduser(Config.AVATARS_DIR)
         return send_from_directory(AVATARS_DIR, filename)
 

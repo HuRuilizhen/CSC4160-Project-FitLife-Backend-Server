@@ -11,7 +11,7 @@ from .post_update import PostUpdateResource
 from .post_delete import PostDeleteResource
 from .comment_create import CommentCreateResource
 from .comment_delete import CommentDeleteResource
-from .sport_log_create import SportLogCreateResource
+from .activity_record_create import ActivityRecordCreate
 
 
 __all__ = [
@@ -28,5 +28,5 @@ __all__ = [
     "PostDeleteResource",
     "CommentCreateResource",
     "CommentDeleteResource",
-    "SportLogCreateResource",
+    "ActivityRecordCreate",
 ]
