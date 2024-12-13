@@ -117,6 +117,15 @@ class ActivityRecord(db.Model):
         "DaySummary", backref=db.backref("activities", lazy=True)
     )
 
+    def __init__(
+        self, user_id, day_summary_id, activity_type, duration, calories_burned
+    ):
+        self.user_id = user_id
+        self.day_summary_id = day_summary_id
+        self.activity_type = activity_type
+        self.duration = duration
+        self.calories_burned = calories_burned
+
     def __repr__(self):
         return f"<Activity {self.activity_type} - {self.duration} minutes>"
 
@@ -149,10 +158,13 @@ class DaySummary(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     date = db.Column(db.Date, default=datetime.date.today)
-    activity_summary = db.Column(db.Float, nullable=False)
-    diet_summary = db.Column(db.Float, nullable=False)
+    activity_summary = db.Column(db.Float, nullable=False, default=0.0)
+    diet_summary = db.Column(db.Float, nullable=False, default=0.0)
 
     user = db.relationship("User", backref=db.backref("day_summaries", lazy=True))
+
+    def __init__(self, user_id):
+        self.user_id = user_id
 
     def __repr__(self):
         return f"<DaySummary {self.date}>"

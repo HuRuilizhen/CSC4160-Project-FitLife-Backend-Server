@@ -5,7 +5,7 @@ from flask_jwt_extended import (
     get_jwt_identity,
 )
 from backend_app.models import User, Comment
-from backend_app.utils import delete_comment
+from backend_app.utils_db import delete_comment
 
 
 class CommentDeleteResource(Resource):

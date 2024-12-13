@@ -1,5 +1,5 @@
 from flask_restful import Resource, reqparse
-from backend_app.utils import create_user
+from backend_app.utils_db import create_user
 
 
 class RegisterResource(Resource):

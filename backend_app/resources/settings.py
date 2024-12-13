@@ -4,7 +4,7 @@ from flask_jwt_extended import (
     get_jwt_identity,
 )
 from backend_app.models import User
-from backend_app.utils import modify_user
+from backend_app.utils_db import modify_user
 from backend_app.config import Config
 import werkzeug
 import datetime

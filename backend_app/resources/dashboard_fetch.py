@@ -4,7 +4,7 @@ from flask_jwt_extended import (
     get_jwt_identity,
 )
 from backend_app.models import User
-from backend_app.utils import fetch_dashboard
+from backend_app.utils_db import fetch_dashboard
 
 
 class DashboardFetchResource(Resource):
