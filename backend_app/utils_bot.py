@@ -53,11 +53,3 @@ def create_activity_record_bot(note):
 
     content = response["output"]["choices"][0]["message"]["content"]
     return get_dict(content)
-
-
-if __name__ == "__main__":
-    print(
-        create_activity_record(
-            "I went running around albert park in auckland for 30 minutes"
-        )
-    )
