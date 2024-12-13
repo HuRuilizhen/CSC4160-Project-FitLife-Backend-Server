@@ -38,3 +38,11 @@ class PROMPT_PATH:
     DIET_WORD = "diet_word.txt"
     DIET_PHOTO = "diet_photo.txt"
     ACTIVITY_WORD = "activity_word.txt"
+
+
+class LIMITS:
+    MAX_POSTS_PER_PAGE = 10
+    MAX_DIETS_DASHBOARD = 5
+    MAX_ACTIVITIES_DASHBOARD = 5
+    MAX_POSTS_DASHBOARD = 5
+    MAX_LIMIT = 10000

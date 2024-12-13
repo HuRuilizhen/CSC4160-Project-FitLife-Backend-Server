@@ -12,6 +12,7 @@ from .post_delete import PostDeleteResource
 from .comment_create import CommentCreateResource
 from .comment_delete import CommentDeleteResource
 from .activity_record_create import ActivityRecordCreate
+from .activity_record_fetch import ActivityRecordFetchResource
 
 
 __all__ = [

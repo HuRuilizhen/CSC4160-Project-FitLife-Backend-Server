@@ -1,19 +1,18 @@
-from . import db
-from .models import User, Post, Comment, DaySummary, ActivityRecord
-from .config import Config
-
 import os
 import datetime
-
 import logging
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
+
+from . import db
+from .models import User, Post, Comment, DaySummary, ActivityRecord
+from .config import Config, LIMITS
+
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
 def create_user(email: str, username: str, password_hash: str) -> User:
-    """Create a new user"""
     try:
         user = User(
             email=email,
@@ -71,11 +70,11 @@ def modify_user(
     return user
 
 
-def fetch_post_by_user(user_id: int, datetime: datetime) -> list:
+def fetch_post_by_user(user_id: int, limit: int = LIMITS.MAX_POSTS_DASHBOARD) -> list:
     posts = (
         Post.query.filter_by(user_id=user_id)
         .order_by(Post.created_at.desc())
-        .limit(3)
+        .limit(limit)
         .all()
     )
     posts_ = []
@@ -101,11 +100,13 @@ def fetch_post_by_user(user_id: int, datetime: datetime) -> list:
     return posts_
 
 
-def fetch_activities(user_id: int, datetime: datetime) -> dict:
+def fetch_activities(
+    user_id: int, limit: int = LIMITS.MAX_ACTIVITIES_DASHBOARD
+) -> dict:
     recentActivities = (
         ActivityRecord.query.filter_by(user_id=user_id)
         .order_by(ActivityRecord.date.desc())
-        .limit(5)
+        .limit(limit)
         .all()
     )
     recentActivities_ = []
@@ -139,8 +140,8 @@ def fetch_dashboard(user_id: int) -> dict:
     return {
         "userCaloriesBurned": userCaloriesBurned,
         "userCaloriesConsumed": userCaloriesConsumed,
-        "posts": fetch_post_by_user(user_id, datetime.datetime.now()),
-        "recentActivities": fetch_activities(user_id, datetime.datetime.now()),
+        "posts": fetch_post_by_user(user_id),
+        "recentActivities": fetch_activities(user_id),
     }
 
 

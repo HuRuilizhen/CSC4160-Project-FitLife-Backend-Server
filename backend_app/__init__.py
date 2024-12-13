@@ -33,6 +33,7 @@ def create_app() -> Flask:
     api.add_resource(resources.CommentCreateResource, "/api/comment/create")
     api.add_resource(resources.CommentDeleteResource, "/api/comment/delete")
     api.add_resource(resources.ActivityRecordCreate, "/api/activity/create")
+    api.add_resource(resources.ActivityRecordFetchResource, "/api/activity/fetch")
 
     @app.route(f"{Config.API_PREFIX}{Config.AVATARS_URL}<path:filename>")
     def get_avatar_file(filename: str):
