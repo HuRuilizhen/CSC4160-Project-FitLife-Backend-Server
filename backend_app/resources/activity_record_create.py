@@ -5,7 +5,7 @@ from backend_app.utils_db import create_activity_record
 from backend_app.utils_bot import create_activity_record_bot
 
 
-class ActivityRecordCreate(Resource):
+class ActivityRecordCreateResource(Resource):
     @jwt_required()
     def post(self):
         current_user_email = get_jwt_identity()

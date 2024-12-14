@@ -4,7 +4,7 @@ import logging
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
 from . import db
-from .models import User, Post, Comment, DaySummary, ActivityRecord
+from .models import User, Post, Comment, DaySummary, ActivityRecord, DietRecord
 from .config import Config, LIMITS
 
 
@@ -100,6 +100,28 @@ def fetch_post_by_user(user_id: int, limit: int = LIMITS.MAX_POSTS_DASHBOARD) ->
     return posts_
 
 
+def fetch_diets(user_id: int, limit: int = LIMITS.MAX_DIETS_DASHBOARD) -> list:
+    recentDiets = (
+        DietRecord.query.filter_by(user_id=user_id)
+        .order_by(DietRecord.date.desc())
+        .limit(limit)
+        .all()
+    )
+    recentDiets_ = []
+    for diet in recentDiets:
+        diet: DietRecord
+        recentDiets_.append(
+            {
+                "id": diet.id,
+                "food_name": diet.food_name,
+                "calories_consumed": diet.calories,
+                "quantity": diet.quantity,
+                "date": diet.date.strftime("%Y-%m-%d"),
+            }
+        )
+    return recentDiets_
+
+
 def fetch_activities(
     user_id: int, limit: int = LIMITS.MAX_ACTIVITIES_DASHBOARD
 ) -> dict:
@@ -118,7 +140,6 @@ def fetch_activities(
                 "activity_type": activity.activity_type,
                 "duration": activity.duration,
                 "calories_burned": activity.calories_burned,
-                "description": f"{activity.activity_type} for {activity.duration} minutes burned {activity.calories_burned} calories on {activity.date.strftime('%Y-%m-%d')}",
                 "date": activity.date.strftime("%Y-%m-%d"),
             }
         )

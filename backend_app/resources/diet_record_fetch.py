@@ -1,11 +1,11 @@
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from backend_app.models import User
-from backend_app.utils_db import fetch_activities
+from backend_app.utils_db import fetch_diets
 from backend_app.config import LIMITS
 
 
-class ActivityRecordFetchResource(Resource):
+class DietRecordFetchResource(Resource):
     @jwt_required()
     def get(self):
         current_user_email = get_jwt_identity()
@@ -23,11 +23,11 @@ class ActivityRecordFetchResource(Resource):
             return response
 
         try:
-            records = fetch_activities(current_user.id, LIMITS.MAX_LIMIT)
+            records = fetch_diets(current_user.id, LIMITS.MAX_DIETS_DASHBOARD)
         except:
             response = {
                 "is_valid": False,
-                "message": "Error fetching activities",
+                "message": "Error fetching diets",
             }
             return response
 

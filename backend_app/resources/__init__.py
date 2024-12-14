@@ -11,7 +11,8 @@ from .post_update import PostUpdateResource
 from .post_delete import PostDeleteResource
 from .comment_create import CommentCreateResource
 from .comment_delete import CommentDeleteResource
-from .activity_record_create import ActivityRecordCreate
+from .diet_record_fetch import DietRecordFetchResource
+from .activity_record_create import ActivityRecordCreateResource
 from .activity_record_fetch import ActivityRecordFetchResource
 
 
@@ -29,5 +30,7 @@ __all__ = [
     "PostDeleteResource",
     "CommentCreateResource",
     "CommentDeleteResource",
+    "DietRecordFetchResource",
     "ActivityRecordCreate",
+    "ActivityRecordFetchResource",
 ]
