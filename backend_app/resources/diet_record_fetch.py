@@ -23,7 +23,7 @@ class DietRecordFetchResource(Resource):
             return response
 
         try:
-            records = fetch_diets(current_user.id, LIMITS.MAX_DIETS_DASHBOARD)
+            records = fetch_diets(current_user.id, LIMITS.MAX_LIMIT)
         except:
             response = {
                 "is_valid": False,

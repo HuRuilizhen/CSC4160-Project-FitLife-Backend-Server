@@ -34,7 +34,28 @@ def get_dict(content: str) -> dict:
         raise ValueError("No JSON object found in the text.")
 
 
-def create_activity_record_bot(note):
+def create_diet_record_bot_word(note):
+    dashscope.api_key = Config.BOT_API_KEY
+    prompt = get_prompt(BOT_TYPE.DIET_WORD)
+
+    messages = [
+        {
+            "role": "system",
+            "content": prompt,
+        },
+        {"role": "user", "content": note},
+    ]
+    response = dashscope.Generation.call(
+        model="qwen-plus",
+        messages=messages,
+        result_format="message",
+    )
+
+    content = response["output"]["choices"][0]["message"]["content"]
+    return get_dict(content)
+
+
+def create_activity_record_bot_word(note):
     dashscope.api_key = Config.BOT_API_KEY
     prompt = get_prompt(BOT_TYPE.ACTIVITY_WORD)
 

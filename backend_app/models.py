@@ -140,13 +140,20 @@ class DietRecord(db.Model):
     )
     food_name = db.Column(db.String(255), nullable=False)
     quantity = db.Column(db.Float, nullable=False)
-    calories = db.Column(db.Float, nullable=False)
+    calories_consumed = db.Column(db.Float, nullable=False)
     date = db.Column(db.Date, default=datetime.date.today)
 
     user = db.relationship("User", backref=db.backref("diet_records", lazy=True))
     day_summary = db.relationship(
         "DaySummary", backref=db.backref("diet_records", lazy=True)
     )
+
+    def __init__(self, user_id, day_summary_id, food_name, quantity, calories_consumed):
+        self.user_id = user_id
+        self.day_summary_id = day_summary_id
+        self.food_name = food_name
+        self.quantity = quantity
+        self.calories_consumed = calories_consumed
 
     def __repr__(self):
         return f"<DietRecord {self.food_name} - {self.quantity}g>"

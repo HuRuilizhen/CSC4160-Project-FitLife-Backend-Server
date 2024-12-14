@@ -114,7 +114,7 @@ def fetch_diets(user_id: int, limit: int = LIMITS.MAX_DIETS_DASHBOARD) -> list:
             {
                 "id": diet.id,
                 "food_name": diet.food_name,
-                "calories_consumed": diet.calories,
+                "calories_consumed": diet.calories_consumed,
                 "quantity": diet.quantity,
                 "date": diet.date.strftime("%Y-%m-%d"),
             }
@@ -303,18 +303,15 @@ def delete_comment(comment_id: int) -> None:
 
 
 def create_day_summary(user_id: int) -> DaySummary:
-    print("start create day summary")
     daySummary: DaySummary = DaySummary(user_id=user_id)
 
     db.session.add(daySummary)
     db.session.commit()
 
-    print("end create day summary")
     return daySummary
 
 
 def find_day_summary(user_id: int) -> DaySummary:
-    print("start find day summary")
     today = datetime.date.today()
     daySummary: DaySummary = DaySummary.query.filter_by(
         user_id=user_id, date=today
@@ -323,7 +320,6 @@ def find_day_summary(user_id: int) -> DaySummary:
     if daySummary is None:
         daySummary = create_day_summary(user_id)
 
-    print("end find day summary")
     return daySummary
 
 
@@ -345,3 +341,23 @@ def create_activity_record(
     db.session.commit()
 
     return activityRecord
+
+
+def create_diet_record(
+    user_id: int, food_name: str, quantity: float, calories_consumed: float
+) -> DietRecord:
+    daySummary: DaySummary = find_day_summary(user_id)
+    daySummary.diet_summary += calories_consumed
+
+    dietRecord: DietRecord = DietRecord(
+        user_id=user_id,
+        day_summary_id=daySummary.id,
+        food_name=food_name,
+        quantity=quantity,
+        calories_consumed=calories_consumed,
+    )
+
+    db.session.add(dietRecord)
+    db.session.commit()
+
+    return dietRecord

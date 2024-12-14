@@ -1,11 +1,11 @@
 from flask_restful import Resource, reqparse
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from backend_app.models import User
-from backend_app.utils_db import create_activity_record
-from backend_app.utils_bot import create_activity_record_bot_word
+from backend_app.utils_db import create_diet_record
+from backend_app.utils_bot import create_diet_record_bot_word
 
 
-class ActivityRecordCreateResource(Resource):
+class DietRecordCreateResource(Resource):
     @jwt_required()
     def post(self):
         current_user_email = get_jwt_identity()
@@ -32,23 +32,23 @@ class ActivityRecordCreateResource(Resource):
         if not note:
             return {"is_valid": False, "message": "Note is a required field."}
 
-        bot_result = create_activity_record_bot_word(note)
+        bot_result = create_diet_record_bot_word(note)
 
-        activity_type = bot_result.get("activity_type")
-        duration = bot_result.get("duration")
-        calories_burned = bot_result.get("calories_burned")
+        food_name = bot_result.get("food_name")
+        quantity = bot_result.get("quantity")
+        calories_consumed = bot_result.get("calories_consumed")
 
-        if not activity_type or not duration or not calories_burned:
+        if not food_name or not quantity or not calories_consumed:
             return {"is_valid": False, "message": "Invalid bot response"}
 
         try:
-            create_activity_record(
+            create_diet_record(
                 user_id=current_user.id,
-                activity_type=activity_type,
-                duration=duration,
-                calories_burned=calories_burned,
+                food_name=food_name,
+                quantity=quantity,
+                calories_consumed=calories_consumed,
             )
         except Exception as e:
-            return {"is_valid": False, "message": "Error creating activity record"}
+            return {"is_valid": False, "message": "Error creating diet record"}
 
-        return {"is_valid": True, "message": "Sport log created successfully."}
+        return {"is_valid": True, "message": "Diet record successfully created"}
