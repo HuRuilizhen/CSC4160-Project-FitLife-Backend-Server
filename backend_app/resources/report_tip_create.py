@@ -1,14 +1,19 @@
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from backend_app.models import User
-from backend_app.utils_db import create_health_report, fetch_activities, fetch_diets
+from backend_app.utils_db import (
+    create_health_report,
+    fetch_activities,
+    fetch_diets,
+    get_health_report_dict,
+)
 from backend_app.utils_bot import create_tips_bot_word
 from backend_app.config import LIMITS
 
 
 class ReportTipCreateResource(Resource):
     @jwt_required()
-    def post(self):
+    def get(self):
         current_user_email = get_jwt_identity()
 
         try:
@@ -29,7 +34,7 @@ class ReportTipCreateResource(Resource):
         bot_result = create_tips_bot_word(diet_records, activity_records)
 
         try:
-            tip = create_health_report(current_user.id, bot_result)
+            health_report = create_health_report(current_user.id, bot_result)
         except:
             response = {
                 "is_valid": False,
@@ -39,6 +44,6 @@ class ReportTipCreateResource(Resource):
 
         response = {
             "is_valid": True,
-            "tip": tip,
+            "tip": get_health_report_dict(health_report),
         }
         return response

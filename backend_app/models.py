@@ -187,9 +187,8 @@ class HealthReport(db.Model):
 
     user = db.relationship("User", backref=db.backref("health_reports", lazy=True))
 
-    def __init__(self, user_id, date, health_advice):
+    def __init__(self, user_id, health_advice):
         self.user_id = user_id
-        self.date = date
         self.health_advice = health_advice
 
     def __repr__(self):

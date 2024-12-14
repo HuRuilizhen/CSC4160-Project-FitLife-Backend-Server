@@ -474,3 +474,11 @@ def create_health_report(user_id: int, health_advice: str) -> HealthReport:
     db.session.commit()
 
     return healthReport
+
+
+def get_health_report_dict(healthReport: HealthReport) -> dict:
+    return {
+        "id": healthReport.id,
+        "date": healthReport.date.strftime("%Y-%m-%d"),
+        "health_advice": healthReport.health_advice,
+    }
