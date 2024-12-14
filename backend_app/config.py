@@ -38,6 +38,7 @@ class PROMPT_PATH:
     DIET_WORD = "diet_word.txt"
     DIET_PHOTO = "diet_photo.txt"
     ACTIVITY_WORD = "activity_word.txt"
+    TIPS_WORD = "tips_word.txt"
 
 
 class LIMITS:

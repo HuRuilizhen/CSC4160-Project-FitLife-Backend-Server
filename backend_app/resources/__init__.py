@@ -15,6 +15,7 @@ from .diet_record_fetch import DietRecordFetchResource
 from .diet_record_create import DietRecordCreateResource
 from .activity_record_create import ActivityRecordCreateResource
 from .activity_record_fetch import ActivityRecordFetchResource
+from .report_chart_fetch import ReportChartFetchResource
 
 
 __all__ = [
@@ -35,4 +36,5 @@ __all__ = [
     "DietRecordCreateResource",
     "ActivityRecordCreateResource",
     "ActivityRecordFetchResource",
+    "ReportChartFetchResource",
 ]

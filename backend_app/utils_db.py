@@ -1,6 +1,7 @@
 import os
 import datetime
 import logging
+from datetime import timedelta, date
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
 from . import db
@@ -362,3 +363,74 @@ def create_diet_record(
     db.session.commit()
 
     return dietRecord
+
+
+def fetch_day_summaries(user_id: int, date_from: date, date_to: date) -> list:
+    daySummaries = (
+        DaySummary.query.filter_by(user_id=user_id)
+        .filter(DaySummary.date >= date_from)
+        .filter(DaySummary.date <= date_to)
+        .all()
+    )
+
+    date_dict = {daySummary.date: daySummary for daySummary in daySummaries}
+
+    daySummaries_ = []
+
+    while date_from <= date_to:
+        daySummary = date_dict.get(date_from)
+        if daySummary is None:
+            daySummaries_.append(
+                {
+                    "date": date_from.strftime("%Y-%m-%d"),
+                    "activity_summary": 0,
+                    "diet_summary": 0,
+                }
+            )
+        else:
+            daySummaries_.append(
+                {
+                    "date": daySummary.date.strftime("%Y-%m-%d"),
+                    "activity_summary": daySummary.activity_summary,
+                    "diet_summary": daySummary.diet_summary,
+                }
+            )
+        date_from += timedelta(days=1)
+
+    return daySummaries_
+
+
+def fetch_chart_data(user_id: int) -> list:
+    daySummariesWeek = fetch_day_summaries(
+        user_id, datetime.date.today() - timedelta(days=7), datetime.date.today()
+    )
+    daySummariesMonth = fetch_day_summaries(
+        user_id, datetime.date.today() - timedelta(days=30), datetime.date.today()
+    )
+
+    datesWeek = []
+    caloriesBurnedWeek = []
+    caloriesConsumedWeek = []
+
+    datesMonth = []
+    caloriesBurnedMonth = []
+    caloriesConsumedMonth = []
+
+    for daySummary in daySummariesWeek:
+        datesWeek.append(daySummary["date"])
+        caloriesBurnedWeek.append(daySummary["activity_summary"])
+        caloriesConsumedWeek.append(daySummary["diet_summary"])
+
+    for daySummary in daySummariesMonth:
+        datesMonth.append(daySummary["date"])
+        caloriesBurnedMonth.append(daySummary["activity_summary"])
+        caloriesConsumedMonth.append(daySummary["diet_summary"])
+
+    return {
+        "datesWeek": datesWeek,
+        "caloriesBurnedWeek": caloriesBurnedWeek,
+        "caloriesConsumedWeek": caloriesConsumedWeek,
+        "datesMonth": datesMonth,
+        "caloriesBurnedMonth": caloriesBurnedMonth,
+        "caloriesConsumedMonth": caloriesConsumedMonth,
+    }
