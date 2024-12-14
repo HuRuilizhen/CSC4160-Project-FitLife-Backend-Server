@@ -16,6 +16,8 @@ def get_prompt(bot_type: str) -> str:
         path = os.path.join(STATIC_PROMPT_DIR, PROMPT_PATH.DIET_PHOTO)
     elif bot_type == BOT_TYPE.ACTIVITY_WORD:
         path = os.path.join(STATIC_PROMPT_DIR, PROMPT_PATH.ACTIVITY_WORD)
+    elif bot_type == BOT_TYPE.TIPS_WORD:
+        path = os.path.join(STATIC_PROMPT_DIR, PROMPT_PATH.TIPS_WORD)
     else:
         raise ValueError(f"Unknown bot type: {bot_type}")
 
@@ -74,3 +76,25 @@ def create_activity_record_bot_word(note):
 
     content = response["output"]["choices"][0]["message"]["content"]
     return get_dict(content)
+
+
+def create_tips_bot_word(diet_log, activity_log):
+    dashscope.api_key = Config.BOT_API_KEY
+    prompt = get_prompt(BOT_TYPE.TIPS_WORD)
+
+    messages = [
+        {
+            "role": "system",
+            "content": prompt,
+        },
+        {"role": "user", "content": f"diet_log are:\n {diet_log}"},
+        {"role": "user", "content": f"activity_log are:\n {activity_log}"},
+    ]
+    response = dashscope.Generation.call(
+        model="qwen-plus",
+        messages=messages,
+        result_format="message",
+    )
+
+    content = response["output"]["choices"][0]["message"]["content"]
+    return content

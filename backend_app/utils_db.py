@@ -5,7 +5,15 @@ from datetime import timedelta, date
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
 from . import db
-from .models import User, Post, Comment, DaySummary, ActivityRecord, DietRecord
+from .models import (
+    User,
+    Post,
+    Comment,
+    DaySummary,
+    ActivityRecord,
+    DietRecord,
+    HealthReport,
+)
 from .config import Config, LIMITS
 
 
@@ -434,3 +442,36 @@ def fetch_chart_data(user_id: int) -> list:
         "caloriesBurnedMonth": caloriesBurnedMonth,
         "caloriesConsumedMonth": caloriesConsumedMonth,
     }
+
+
+def fetch_health_reports(user_id: int) -> list:
+    healthReports = (
+        HealthReport.query.filter_by(user_id=user_id)
+        .order_by(HealthReport.date.desc())
+        .all()
+    )
+
+    healthReports_ = []
+    for healthReport in healthReports:
+        healthReport: HealthReport
+        healthReports_.append(
+            {
+                "id": healthReport.id,
+                "date": healthReport.date.strftime("%Y-%m-%d"),
+                "health_advice": healthReport.health_advice,
+            }
+        )
+    return healthReports_
+
+
+def create_health_report(user_id: int, date: date, health_advice: str) -> HealthReport:
+    healthReport: HealthReport = HealthReport(
+        user_id=user_id,
+        date=date,
+        health_advice=health_advice,
+    )
+
+    db.session.add(healthReport)
+    db.session.commit()
+
+    return healthReport

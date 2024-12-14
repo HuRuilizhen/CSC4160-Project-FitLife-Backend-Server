@@ -182,12 +182,15 @@ class HealthReport(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    report_date = db.Column(db.Date, default=datetime.date.today)
-    activity_summary = db.Column(db.Text)
-    diet_summary = db.Column(db.Text)
+    date = db.Column(db.Date, default=datetime.date.today)
     health_advice = db.Column(db.Text)
 
     user = db.relationship("User", backref=db.backref("health_reports", lazy=True))
+
+    def __init__(self, user_id, date, health_advice):
+        self.user_id = user_id
+        self.date = date
+        self.health_advice = health_advice
 
     def __repr__(self):
         return f"<HealthReport {self.report_date}>"
