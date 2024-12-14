@@ -162,6 +162,7 @@ def fetch_dashboard(user_id: int) -> dict:
         "userCaloriesBurned": userCaloriesBurned,
         "userCaloriesConsumed": userCaloriesConsumed,
         "posts": fetch_post_by_user(user_id),
+        "recentDiets": fetch_diets(user_id),
         "recentActivities": fetch_activities(user_id),
     }
 
