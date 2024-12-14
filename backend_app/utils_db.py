@@ -464,10 +464,9 @@ def fetch_health_reports(user_id: int) -> list:
     return healthReports_
 
 
-def create_health_report(user_id: int, date: date, health_advice: str) -> HealthReport:
+def create_health_report(user_id: int, health_advice: str) -> HealthReport:
     healthReport: HealthReport = HealthReport(
         user_id=user_id,
-        date=date,
         health_advice=health_advice,
     )
 

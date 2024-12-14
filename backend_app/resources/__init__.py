@@ -17,6 +17,7 @@ from .activity_record_create import ActivityRecordCreateResource
 from .activity_record_fetch import ActivityRecordFetchResource
 from .report_chart_fetch import ReportChartFetchResource
 from .report_tips_fetch import ReportTipsFetchResource
+from .report_tip_create import ReportTipCreateResource
 
 
 __all__ = [
@@ -39,4 +40,5 @@ __all__ = [
     "ActivityRecordFetchResource",
     "ReportChartFetchResource",
     "ReportTipsFetchResource",
+    "ReportTipCreateResource",
 ]
