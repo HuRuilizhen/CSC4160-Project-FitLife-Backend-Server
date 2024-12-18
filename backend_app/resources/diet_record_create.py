@@ -19,7 +19,7 @@ class DietRecordCreateResource(Resource):
 
         parser = reqparse.RequestParser()
         parser.add_argument(
-            "note", type=str, required=True, location="json", help="Note is required"
+            "note", type=str, required=True, location="form", help="Note is required"
         )
 
         try:
